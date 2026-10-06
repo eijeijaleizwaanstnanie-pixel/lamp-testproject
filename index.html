@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schakelaar en Lamp Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        /* Lamp styling */
+        .lamp {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 auto 20px auto;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .lamp.aan {
+            background-color: #ffeb3b;
+            box-shadow: 0 0 25px #ffeb3b, inset 0 0 10px rgba(255,255,255,0.5);
+        }
+        /* Schakelaar styling (Toggle switch) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Lamp & Schakelaar Test</h2>
+    <!-- De Lamp -->
+    <div id="lamp" class="lamp"></div>
+    
+    <!-- De Schakelaar -->
+    <label class="switch">
+        <input type="checkbox" id="schakelaar">
+        <span class="slider"></span>
+    </label>
+    <p id="status">De lamp is uit</p>
+</div>
+
+<script>
+    const schakelaar = document.getElementById('schakelaar');
+    const lamp = document.getElementById('lamp');
+    const statusTekst = document.getElementById('status');
+
+    schakelaar.addEventListener('change', function() {
+        if (this.checked) {
+            lamp.classList.add('aan');
+            statusTekst.textContent = "De lamp is aan!";
+            // In de echte opdracht stuur je hier een signaal naar de back-end:
+            // "Wie zet de lamp aan?" -> Microsoft 365 gebruikersnaam opslaan.
+        } else {
+            lamp.classList.remove('aan');
+            statusTekst.textContent = "De lamp is uit";
+        }
+    });
+</script>
+
+</body>
+</html>
