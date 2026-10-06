@@ -102,27 +102,31 @@ const lamp = document.getElementById('lamp');
 const statusTekst = document.getElementById('status');
 
 schakelaar.addEventListener('change', async function() {
+    const huidigeStatus = this.checked ? 'aan' : 'uit';
+
     if (this.checked) {
         lamp.classList.add('aan');
         statusTekst.textContent = "De lamp is aan!";
-
-        // Sla de actie op in Supabase
-        const { error } = await _supabase
-            .from('lamp_status') // Zorg dat je deze tabel hebt aangemaakt in Supabase
-            .insert([{ status: 'aan', gebruiker: 'Testgebruiker' }]);
-
-        if (error) console.error('Fout bij opslaan:', error);
-
     } else {
         lamp.classList.remove('aan');
         statusTekst.textContent = "De lamp is uit";
+    }
 
-        // Sla de actie op in Supabase
-        const { error } = await _supabase
-            .from('lamp_status')
-            .insert([{ status: 'uit', gebruiker: 'Testgebruiker' }]);
-
-        if (error) console.error('Fout bij opslaan:', error);
+    // Sla de actie direct logisch op in de lamp_status tabel
+    const { error } = await _supabase
+        .from('lamp_status')
+        .insert([
+            { 
+                status: huidigeStatus, 
+                gebruiker: 'Testgebruiker', 
+                tijdstip: new Date().toISOString() 
+            }
+        ]);
+        
+    if (error) {
+        console.error('Fout bij opslaan in Supabase:', error);
+    } else {
+        console.log('Succesvol opgeslagen in lamp_status!');
     }
 });
 </script>
