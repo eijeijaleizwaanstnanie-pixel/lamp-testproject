@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schakelaar en Lamp Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,21 +92,39 @@
 </div>
 
 <script>
-    const schakelaar = document.getElementById('schakelaar');
-    const lamp = document.getElementById('lamp');
-    const statusTekst = document.getElementById('status');
+// 1. Initialiseer Supabase (vervang de placeholders door jouw echte URL en key)
+const supabaseUrl = 'https://ruvdxcslzxrbpaumvztx.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dmR4Y3NsenhyYnBhdW12enR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMTg0NjYsImV4cCI6MjEwNjg5NDQ2Nn0.mdg-NkifYq2rAIbAtW4AP2tTSY3KIriIRc4kNt5IS6w';
+const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    schakelaar.addEventListener('change', function() {
-        if (this.checked) {
-            lamp.classList.add('aan');
-            statusTekst.textContent = "De lamp is aan!";
-            // In de echte opdracht stuur je hier een signaal naar de back-end:
-            // "Wie zet de lamp aan?" -> Microsoft 365 gebruikersnaam opslaan.
-        } else {
-            lamp.classList.remove('aan');
-            statusTekst.textContent = "De lamp is uit";
-        }
-    });
+const schakelaar = document.getElementById('schakelaar');
+const lamp = document.getElementById('lamp');
+const statusTekst = document.getElementById('status');
+
+schakelaar.addEventListener('change', async function() {
+    if (this.checked) {
+        lamp.classList.add('aan');
+        statusTekst.textContent = "De lamp is aan!";
+
+        // Sla de actie op in Supabase
+        const { error } = await _supabase
+            .from('lamp_status') // Zorg dat je deze tabel hebt aangemaakt in Supabase
+            .insert([{ status: 'aan', gebruiker: 'Testgebruiker' }]);
+
+        if (error) console.error('Fout bij opslaan:', error);
+
+    } else {
+        lamp.classList.remove('aan');
+        statusTekst.textContent = "De lamp is uit";
+
+        // Sla de actie op in Supabase
+        const { error } = await _supabase
+            .from('lamp_status')
+            .insert([{ status: 'uit', gebruiker: 'Testgebruiker' }]);
+
+        if (error) console.error('Fout bij opslaan:', error);
+    }
+});
 </script>
 
 </body>
